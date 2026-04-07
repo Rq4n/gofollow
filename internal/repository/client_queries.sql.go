@@ -11,9 +11,10 @@ import (
 	"github.com/google/uuid"
 )
 
-const createNewClient = `-- name: CreateNewClient :exec
+const createNewClient = `-- name: CreateNewClient :one
 INSERT INTO clients (user_id, name, email, invoice_link)
 VALUES ($1, $2, $3, $4)
+RETURNING id
 `
 
 type CreateNewClientParams struct {
@@ -23,14 +24,16 @@ type CreateNewClientParams struct {
 	InvoiceLink string
 }
 
-func (q *Queries) CreateNewClient(ctx context.Context, arg CreateNewClientParams) error {
-	_, err := q.db.Exec(ctx, createNewClient,
+func (q *Queries) CreateNewClient(ctx context.Context, arg CreateNewClientParams) (uuid.UUID, error) {
+	row := q.db.QueryRow(ctx, createNewClient,
 		arg.UserID,
 		arg.Name,
 		arg.Email,
 		arg.InvoiceLink,
 	)
-	return err
+	var id uuid.UUID
+	err := row.Scan(&id)
+	return id, err
 }
 
 const getClientByID = `-- name: GetClientByID :one

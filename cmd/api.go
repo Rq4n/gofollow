@@ -4,7 +4,6 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Rq4n/gofollow/internal/auth"
 	"github.com/Rq4n/gofollow/internal/database"
 	"github.com/Rq4n/gofollow/internal/handler"
 	"github.com/Rq4n/gofollow/internal/mailer"
@@ -27,11 +26,11 @@ func (s *APIServer) mount() http.Handler {
 	r.Post("/register", s.userHandler.HandleCreateUser)
 	r.Post("/login", s.userHandler.HandleUserLogin)
 
-	r.Route("/admin", func(r chi.Router) {
-		r.Use(auth.AuthMiddleware)
-
-		r.Post("/client", s.clientHandler.HandleCreateClient)
-	})
+	r.Post("/client", s.clientHandler.HandleCreateClient)
+	// r.Route("/admin", func(r chi.Router) {
+	// 	r.Use(auth.AuthMiddleware)
+	//
+	// })
 
 	return r
 }

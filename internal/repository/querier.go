@@ -11,7 +11,8 @@ import (
 )
 
 type Querier interface {
-	CreateNewClient(ctx context.Context, arg CreateNewClientParams) error
+	CreateEmailJob(ctx context.Context, arg CreateEmailJobParams) error
+	CreateNewClient(ctx context.Context, arg CreateNewClientParams) (uuid.UUID, error)
 	CreateNewUser(ctx context.Context, arg CreateNewUserParams) error
 	GetClientByID(ctx context.Context, id uuid.UUID) (Client, error)
 	GetEmailJobByID(ctx context.Context, id uuid.UUID) (EmailJob, error)

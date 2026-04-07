@@ -1,1 +1,4 @@
 .env
+.air.toml
+docker-compose.yaml
+sqlc.yaml

@@ -9,7 +9,23 @@ import (
 	"context"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgtype"
 )
+
+const createEmailJob = `-- name: CreateEmailJob :exec
+INSERT INTO email_jobs (client_id, send_at)
+VALUES ($1, $2)
+`
+
+type CreateEmailJobParams struct {
+	ClientID uuid.UUID
+	SendAt   pgtype.Timestamptz
+}
+
+func (q *Queries) CreateEmailJob(ctx context.Context, arg CreateEmailJobParams) error {
+	_, err := q.db.Exec(ctx, createEmailJob, arg.ClientID, arg.SendAt)
+	return err
+}
 
 const getEmailJobByID = `-- name: GetEmailJobByID :one
 SELECT id, client_id, status, send_at, sent_at, created_at

@@ -8,6 +8,7 @@ import (
 
 	"github.com/Rq4n/gofollow/internal/repository"
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type ClientService struct {
@@ -28,9 +29,21 @@ func (s *ClientService) CreateNewClient(ctx context.Context, userID uuid.UUID, n
 		InvoiceLink: invoiceLink,
 	}
 
-	if err := s.repo.CreateNewClient(ctx, arg); err != nil {
+	clientID, err := s.repo.CreateNewClient(ctx, arg)
+	if err != nil {
 		log.Print("failed to create client")
 		return err
+	}
+	jobArg := repository.CreateEmailJobParams{
+		ClientID: clientID,
+		SendAt: pgtype.Timestamptz{
+			Time:  sendDate,
+			Valid: true,
+		},
+	}
+
+	if err := s.repo.CreateEmailJob(ctx, jobArg); err != nil {
+		return fmt.Errorf("Failed to create email job: %w", err)
 	}
 
 	return nil

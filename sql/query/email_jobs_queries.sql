@@ -1,3 +1,7 @@
+-- name: CreateEmailJob :exec
+INSERT INTO email_jobs (client_id, send_at)
+VALUES ($1, $2);
+
 -- name: GetEmailJobByID :one
 SELECT id, client_id, status, send_at, sent_at, created_at
 FROM email_jobs
