@@ -30,7 +30,7 @@ func (h *UserHandler) HandleCreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := h.userService.CreateNewUser(r.Context(), req.Name, req.Password); err != nil {
+	if err := h.userService.CreateNewUser(r.Context(), req.Email, req.Password); err != nil {
 		http.Error(w, ErrInternalServerErr.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -51,7 +51,7 @@ func (h *UserHandler) HandleUserLogin(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, ErrInvalidRequestBody.Error(), http.StatusBadRequest)
 		return
 	}
-	user, err := h.userService.GetUserByName(r.Context(), req.Name, req.Password)
+	user, err := h.userService.GetUserByName(r.Context(), req.Email, req.Password)
 	if err != nil {
 		http.Error(w, ErrInternalServerErr.Error(), http.StatusInternalServerError)
 		return

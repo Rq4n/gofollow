@@ -7,11 +7,16 @@ type Config struct {
 	Logs   LogLevel
 	DB     PostgresConfig
 	Mailer MailerConfig
+	Auth   AuthConfig
 }
 
 type LogLevel struct {
 	Style string
 	Level string
+}
+
+type AuthConfig struct {
+	SecretKey string
 }
 
 type MailerConfig struct {
@@ -32,6 +37,9 @@ type PostgresConfig struct {
 func LoadConfig() (*Config, error) {
 	cfg := &Config{
 		Port: os.Getenv("PORT"),
+		Auth: AuthConfig{
+			SecretKey: os.Getenv("JWT_SECRET"),
+		},
 		Logs: LogLevel{
 			Style: os.Getenv("LOG_STYLE"),
 			Level: os.Getenv("LOG_LEVEL"),

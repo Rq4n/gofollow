@@ -3,15 +3,12 @@ package auth
 import (
 	"errors"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 )
-
-// dsadasda
-// d sadsadsadasd
-var secretKey = []byte("secret")
 
 type CustomClaims struct {
 	Account string    `json:"account"`
@@ -29,7 +26,7 @@ func GenerateToken(userID uuid.UUID, account string) (string, error) {
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString([]byte(secretKey))
+	return token.SignedString([]byte(os.Getenv("JWT_SECRET")))
 }
 
 func ValidateToken(tokenString string) (*CustomClaims, error) {
@@ -37,7 +34,7 @@ func ValidateToken(tokenString string) (*CustomClaims, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method %v", t.Header["alg"])
 		}
-		return []byte(secretKey), nil
+		return []byte(os.Getenv("JWT_SECRET")), nil
 	})
 	if err != nil {
 		return nil, err

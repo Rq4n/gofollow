@@ -6,7 +6,7 @@ import (
 )
 
 type UserParams struct {
-	Name     string `json:"name"`
+	Email    string `json:"name"`
 	Password string `json:"password"`
 }
 

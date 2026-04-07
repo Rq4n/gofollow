@@ -88,13 +88,13 @@ func main() {
 		}
 	}()
 
-	app := &APIServer{
-		listenAddr:    cfg.Port,
-		dbConfig:      dbConfig,
-		dbPool:        dbPool,
-		userHandler:   userHandler,
-		clientHandler: clientHandler,
-		mail:          mailClient,
+	app := &Application{
+		listenAddr: cfg.Port,
+		mail:       mailClient,
+		Handler: Handler{
+			handleUser:   userHandler,
+			handleClient: clientHandler,
+		},
 	}
 
 	mux := app.mount()
