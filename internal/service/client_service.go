@@ -31,10 +31,11 @@ func (s *ClientService) CreateNewClient(ctx context.Context, userID uuid.UUID, n
 
 	clientID, err := s.repo.CreateNewClient(ctx, arg)
 	if err != nil {
-		log.Print("failed to create client")
+		log.Printf("failed to create client: %v", err)
 		return err
 	}
 	jobArg := repository.CreateEmailJobParams{
+		Status:   "pending",
 		ClientID: clientID,
 		SendAt: pgtype.Timestamptz{
 			Time:  sendDate,

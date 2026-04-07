@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"encoding/json"
+	"log"
 	"net/http"
 	"time"
 
@@ -48,6 +49,7 @@ func (h *ClientHandler) HandleCreateClient(w http.ResponseWriter, r *http.Reques
 	}
 
 	if err := h.clientService.CreateNewClient(r.Context(), userID, req.Name, req.Email, req.InvoiceLink, sendDate); err != nil {
+		log.Printf("CreateNewClient error: %v", err)
 		http.Error(w, ErrInternalServerErr.Error(), http.StatusInternalServerError)
 		return
 	}

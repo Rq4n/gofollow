@@ -13,17 +13,18 @@ import (
 )
 
 const createEmailJob = `-- name: CreateEmailJob :exec
-INSERT INTO email_jobs (client_id, send_at)
-VALUES ($1, $2)
+INSERT INTO email_jobs (status, client_id, send_at)
+VALUES ($1, $2, $3)
 `
 
 type CreateEmailJobParams struct {
+	Status   string
 	ClientID uuid.UUID
 	SendAt   pgtype.Timestamptz
 }
 
 func (q *Queries) CreateEmailJob(ctx context.Context, arg CreateEmailJobParams) error {
-	_, err := q.db.Exec(ctx, createEmailJob, arg.ClientID, arg.SendAt)
+	_, err := q.db.Exec(ctx, createEmailJob, arg.Status, arg.ClientID, arg.SendAt)
 	return err
 }
 

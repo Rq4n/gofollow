@@ -2,6 +2,7 @@ package mailer
 
 import "embed"
 
+//go:embed templates
 var FS embed.FS
 
 type Mailer interface {
