@@ -5,12 +5,12 @@ import (
 	"net/http"
 )
 
-type User struct {
+type UserParams struct {
 	Name     string `json:"name"`
 	Password string `json:"password"`
 }
 
-type Client struct {
+type ClientParams struct {
 	Name        string `json:"name"`
 	Email       string `json:"email"`
 	InvoiceLink string `json:"invoice_link"`

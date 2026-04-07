@@ -13,14 +13,14 @@ type mailtrapClient struct {
 	apiKey    string
 }
 
-func NewMailTrapClient(fromEmail, apiKey string) (Mailer, error) {
-	if apiKey == "" {
+func NewMailTrapClient(FromEmail, APIKey string) (Mailer, error) {
+	if APIKey == "" {
 		return mailtrapClient{}, errors.New("api key is required")
 	}
 
 	return mailtrapClient{
-		fromEmail: fromEmail,
-		apiKey:    apiKey,
+		fromEmail: FromEmail,
+		apiKey:    APIKey,
 	}, nil
 }
 

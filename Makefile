@@ -3,7 +3,7 @@ dev:
 	@$(MAKE) run
 
 build:
-	@go build  -o bin/gofollow ./cmd
+	@go build  -o bin/gofollow ./cmd/api/
 
 run: build
 	@./bin/gofollow
