@@ -2,9 +2,12 @@ package service
 
 import (
 	"context"
-	"log"
+	"errors"
+	"fmt"
 
 	"github.com/Rq4n/gofollow/internal/repository"
+	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgconn"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -18,33 +21,43 @@ func NewUserService(repo repository.Querier) *UserService {
 	}
 }
 
+var (
+	ErrUserAlreadyExists  = errors.New("user already exists")
+	ErrInvalidCredentials = errors.New("invalid credentials")
+	ErrUserNotFound       = errors.New("user not found")
+)
+
 func (s *UserService) CreateNewUser(ctx context.Context, email, password string) error {
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return err
 	}
+
 	arg := repository.CreateNewUserParams{
 		Email:    email,
 		Password: string(hash),
 	}
+
 	if err := s.repo.CreateNewUser(ctx, arg); err != nil {
-		log.Printf("failed to create user %v", err)
-		return err
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) && pgErr.Code == "23505" {
+			return ErrUserAlreadyExists
+		}
+		return fmt.Errorf("db error: %w", err)
 	}
 	return nil
 }
 
-func CheckPassword(password, hash string) error {
-	return bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
-}
-
-func (s *UserService) GetUserByName(ctx context.Context, name, password string) (*repository.GetUserByNameRow, error) {
-	user, err := s.repo.GetUserByName(ctx, name)
+func (s *UserService) GetUserByEmail(ctx context.Context, email, password string) (*repository.GetUserByEmailRow, error) {
+	user, err := s.repo.GetUserByEmail(ctx, email)
 	if err != nil {
-		return nil, err
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, ErrUserNotFound
+		}
+		return nil, fmt.Errorf("db error: %w", err)
 	}
 
-	if err := CheckPassword(password, user.Password); err != nil {
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
 		return nil, err
 	}
 	return &user, nil

@@ -38,6 +38,7 @@ func main() {
 		cfg.DB.Password,
 		cfg.DB.URL,
 		cfg.DB.Port,
+		cfg.DB.DB,
 	)
 
 	dbConfig := &database.Config{

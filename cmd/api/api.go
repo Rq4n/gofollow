@@ -74,8 +74,6 @@ func (app *Application) start(mux http.Handler) error {
 		shutdown <- srv.Shutdown(ctx)
 	}()
 
-	log.Print("server has started", "addr", app.listenAddr)
-
 	err := srv.ListenAndServe()
 	if !errors.Is(err, http.ErrServerClosed) {
 		return err
@@ -86,7 +84,7 @@ func (app *Application) start(mux http.Handler) error {
 		return err
 	}
 
-	log.Print("server has stopped", "addr", app.listenAddr)
+	log.Print("server has stopped")
 
 	return nil
 }

@@ -2,12 +2,14 @@ package service
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"time"
 
 	"github.com/Rq4n/gofollow/internal/repository"
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
@@ -20,6 +22,8 @@ func NewClientService(repo repository.Querier) *ClientService {
 		repo: repo,
 	}
 }
+
+var ErrClientNotFound = errors.New("client not found")
 
 func (s *ClientService) CreateNewClient(ctx context.Context, userID uuid.UUID, name, email, invoiceLink string, sendDate time.Time) error {
 	arg := repository.CreateNewClientParams{
@@ -50,10 +54,13 @@ func (s *ClientService) CreateNewClient(ctx context.Context, userID uuid.UUID, n
 	return nil
 }
 
-func (s *ClientService) GetClientByID(ctx context.Context, id uuid.UUID) (*repository.Client, error) {
-	resp, err := s.repo.GetClientByID(ctx, id)
+func (s *ClientService) GetClientByUUID(ctx context.Context, id uuid.UUID) (*repository.Client, error) {
+	resp, err := s.repo.GetClientByUUID(ctx, id)
 	if err != nil {
-		return nil, fmt.Errorf("service_error: %w", err)
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, ErrClientNotFound
+		}
+		return nil, fmt.Errorf("db error: %w", err)
 	}
 	return &resp, nil
 }

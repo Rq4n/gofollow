@@ -28,8 +28,6 @@ func (w *Worker) ProcessSingleJob(ctx context.Context, JobID uuid.UUID) (err err
 		}
 	}()
 
-	// this is the equivalent of a lock, so only one worker
-	// can get a specific job
 	rows, err := w.Email.TryMarkJobAsProcessing(ctx, JobID)
 	if err != nil {
 		return fmt.Errorf("Failed to mark as processing: %w", err)
@@ -38,19 +36,16 @@ func (w *Worker) ProcessSingleJob(ctx context.Context, JobID uuid.UUID) (err err
 		return nil
 	}
 
-	// get email_job
 	job, err := w.Email.GetEmailByJobID(ctx, JobID)
 	if err != nil {
 		return fmt.Errorf("Failed to get job: %w", err)
 	}
 
-	// get client
-	client, err := w.Client.GetClientByID(ctx, job.ClientID)
+	client, err := w.Client.GetClientByUUID(ctx, job.ClientID)
 	if err != nil {
 		return fmt.Errorf("Failed to get client: %w", err)
 	}
 
-	// send email with client data
 	err = w.Mail.Send(
 		client.Name,
 		client.Email,

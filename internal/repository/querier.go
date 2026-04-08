@@ -14,10 +14,10 @@ type Querier interface {
 	CreateEmailJob(ctx context.Context, arg CreateEmailJobParams) error
 	CreateNewClient(ctx context.Context, arg CreateNewClientParams) (uuid.UUID, error)
 	CreateNewUser(ctx context.Context, arg CreateNewUserParams) error
-	GetClientByID(ctx context.Context, id uuid.UUID) (Client, error)
+	GetClientByUUID(ctx context.Context, id uuid.UUID) (Client, error)
 	GetEmailJobByID(ctx context.Context, id uuid.UUID) (EmailJob, error)
 	GetPendingEmailJobs(ctx context.Context) ([]EmailJob, error)
-	GetUserByName(ctx context.Context, email string) (GetUserByNameRow, error)
+	GetUserByEmail(ctx context.Context, email string) (GetUserByEmailRow, error)
 	MarkJobAsCompleted(ctx context.Context, id uuid.UUID) error
 	MarkJobAsFailed(ctx context.Context, id uuid.UUID) error
 	TryMarkJobAsProcessing(ctx context.Context, id uuid.UUID) (int64, error)

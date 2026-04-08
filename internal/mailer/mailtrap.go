@@ -3,26 +3,24 @@ package mailer
 import (
 	"bytes"
 	"errors"
-	"os"
 	"text/template"
 
 	"gopkg.in/gomail.v2"
 )
 
 type mailtrapClient struct {
-	fromEmail string
-	apiKey    string
+	FromEmail string
+	APIKey    string
 }
 
 func NewMailTrapClient(FromEmail, APIKey string) (Mailer, error) {
-	APIKey = os.Getenv("API_KEY")
 	if APIKey == "" {
 		return mailtrapClient{}, errors.New("api key is required")
 	}
 
 	return mailtrapClient{
-		fromEmail: FromEmail,
-		apiKey:    APIKey,
+		FromEmail: FromEmail,
+		APIKey:    APIKey,
 	}, nil
 }
 
@@ -48,11 +46,11 @@ func (m mailtrapClient) Send(username, email string, data any) error {
 	}
 
 	message := gomail.NewMessage()
-	message.SetHeader("From", m.fromEmail)
+	message.SetHeader("From", m.FromEmail)
 	message.SetHeader("To", email)
 	message.SetHeader("Subject", subject.String())
 	message.SetBody("text/html", body.String())
 
-	dialer := gomail.NewDialer("live.smtp.mailtrap.io", 587, "api", m.apiKey)
+	dialer := gomail.NewDialer("live.smtp.mailtrap.io", 587, "api", m.APIKey)
 	return dialer.DialAndSend(message)
 }

@@ -12,7 +12,7 @@ type (
 	// ClientServiceInterface defines client-related methods
 	ClientServiceInterface interface {
 		CreateNewClient(ctx context.Context, userID uuid.UUID, name, email, invoiceLink string, sendDate time.Time) error
-		GetClientByID(ctx context.Context, id uuid.UUID) (*repository.Client, error)
+		GetClientByUUID(ctx context.Context, id, user_id uuid.UUID) (*repository.Client, error)
 	}
 
 	// EmailJobServiceInterface defines email job-related methods
@@ -27,7 +27,7 @@ type (
 	// UserServiceInterface defines user-related methods
 	UserServiceInterface interface {
 		CreateNewUser(ctx context.Context, email, password string) error
-		GetUserByName(ctx context.Context, name, password string) (*repository.GetUserByNameRow, error)
+		GetUserByName(ctx context.Context, name, password string) (*repository.GetUserByEmailRow, error)
 	}
 )
 

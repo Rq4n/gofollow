@@ -25,6 +25,7 @@ type MailerConfig struct {
 }
 
 type PostgresConfig struct {
+	DB          string
 	Username    string
 	Password    string
 	URL         string
@@ -45,6 +46,7 @@ func LoadConfig() (*Config, error) {
 			Level: os.Getenv("LOG_LEVEL"),
 		},
 		DB: PostgresConfig{
+			DB:          os.Getenv("POSTGRES_DB"),
 			Username:    os.Getenv("POSTGRES_USER"),
 			Password:    os.Getenv("POSTGRES_PASSWORD"),
 			URL:         os.Getenv("POSTGRES_URL"),
