@@ -3,6 +3,7 @@ package mailer
 import (
 	"bytes"
 	"errors"
+	"os"
 	"text/template"
 
 	"gopkg.in/gomail.v2"
@@ -14,6 +15,7 @@ type mailtrapClient struct {
 }
 
 func NewMailTrapClient(FromEmail, APIKey string) (Mailer, error) {
+	APIKey = os.Getenv("API_KEY")
 	if APIKey == "" {
 		return mailtrapClient{}, errors.New("api key is required")
 	}
