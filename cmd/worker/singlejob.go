@@ -10,13 +10,10 @@ import (
 	"github.com/google/uuid"
 )
 
-type Job struct {
-	ID uuid.UUID
-}
-
 type Worker struct {
 	Email  *service.EmailJobService
 	Client *service.ClientService
+	User   *service.UserService
 	Mail   mailer.Mailer
 }
 

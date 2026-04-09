@@ -3,7 +3,7 @@ services:
     image: postgres:16
     container_name: gofollow_db
     env_file:
-      - .env
+      .env
     ports:
       - "5432:5432"
     volumes:
@@ -11,6 +11,7 @@ services:
 
   api:
     build: .
+    restart: on-failure
     container_name: gofollow_api
     depends_on:
       - db

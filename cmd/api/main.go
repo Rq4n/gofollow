@@ -38,7 +38,6 @@ func main() {
 		cfg.DB.Password,
 		cfg.DB.URL,
 		cfg.DB.Port,
-		cfg.DB.DB,
 	)
 
 	dbConfig := &database.Config{
@@ -80,7 +79,7 @@ func main() {
 			}
 
 			for _, job := range jobs {
-				go workerInstance.ProcessSingleJob(context.Background(), job.ID)
+				go workerInstance.ProcessSingleJob(context.Background(), job.ClientID)
 			}
 
 			time.Sleep(5 * time.Second)

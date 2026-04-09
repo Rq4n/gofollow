@@ -38,7 +38,7 @@ func (q *Queries) CreateNewClient(ctx context.Context, arg CreateNewClientParams
 
 const getClientByUUID = `-- name: GetClientByUUID :one
 SELECT id, user_id, name, email, invoice_link, created_at FROM clients 
-WHERE id = $1 AND user_id = $1
+WHERE id = $1
 `
 
 func (q *Queries) GetClientByUUID(ctx context.Context, id uuid.UUID) (Client, error) {
