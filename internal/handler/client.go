@@ -24,7 +24,7 @@ func NewClientHandler(clientService service.ClientService) *ClientHandler {
 type ClientPayload struct {
 	Name        string `json:"name"         validate:"required"`
 	Email       string `json:"email"        validate:"required,email"`
-	InvoiceLink string `json:"invoice_link" validate:"required,url"`
+	InvoiceLink string `json:"invoice_link" validate:"required, url"`
 	SendDate    string `json:"send_date"    validate:"required"`
 }
 

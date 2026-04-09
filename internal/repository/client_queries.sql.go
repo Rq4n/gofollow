@@ -36,6 +36,38 @@ func (q *Queries) CreateNewClient(ctx context.Context, arg CreateNewClientParams
 	return id, err
 }
 
+const getAllClients = `-- name: GetAllClients :many
+SELECT id, user_id, name, email, invoice_link, created_at FROM clients
+ORDER BY created_at DESC
+`
+
+func (q *Queries) GetAllClients(ctx context.Context) ([]Client, error) {
+	rows, err := q.db.Query(ctx, getAllClients)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Client
+	for rows.Next() {
+		var i Client
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.Name,
+			&i.Email,
+			&i.InvoiceLink,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getClientByUUID = `-- name: GetClientByUUID :one
 SELECT id, user_id, name, email, invoice_link, created_at FROM clients 
 WHERE id = $1

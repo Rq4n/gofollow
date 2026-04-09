@@ -33,11 +33,12 @@ func main() {
 	}
 
 	dsn := fmt.Sprintf(
-		"postgres://%s:%s@%s:%s/gofollow?sslmode=disable",
+		"postgres://%s:%s@%s:%s/%s?sslmode=disable",
 		cfg.DB.Username,
 		cfg.DB.Password,
-		cfg.DB.URL,
+		cfg.DB.Host,
 		cfg.DB.Port,
+		cfg.DB.DB,
 	)
 
 	dbConfig := &database.Config{
@@ -89,6 +90,9 @@ func main() {
 	app := &Application{
 		listenAddr: cfg.Port,
 		mail:       mailClient,
+		DBConfig: DBConfig{
+			dbPool: dbPool,
+		},
 		Handler: Handler{
 			handleUser:   userHandler,
 			handleClient: clientHandler,

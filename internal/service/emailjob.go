@@ -66,3 +66,11 @@ func (s *EmailJobService) TryMarkJobAsProcessing(ctx context.Context, id uuid.UU
 	}
 	return rows, nil
 }
+
+func (s *EmailJobService) GetAllEmailjobs(ctx context.Context) ([]repository.EmailJob, error) {
+	resp, err := s.repo.GetAllEmailJobs(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("db error %v", err)
+	}
+	return resp, nil
+}

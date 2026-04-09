@@ -9,6 +9,7 @@ import (
 )
 
 type mockRepo struct {
+	repository.Querier
 	createUserErr     error
 	createClientErr   error
 	createEmailJobErr error

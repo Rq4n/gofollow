@@ -62,7 +62,6 @@ func (app *Application) start(mux http.Handler) error {
 
 	go func() {
 		quit := make(chan os.Signal, 1)
-
 		signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 		s := <-quit
 
@@ -70,7 +69,6 @@ func (app *Application) start(mux http.Handler) error {
 		defer cancel()
 
 		log.Print("signal caught", "signal", s.String())
-
 		shutdown <- srv.Shutdown(ctx)
 	}()
 
@@ -85,6 +83,5 @@ func (app *Application) start(mux http.Handler) error {
 	}
 
 	log.Print("server has stopped")
-
 	return nil
 }

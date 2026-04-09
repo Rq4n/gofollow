@@ -1,13 +1,59 @@
-{{define "subject"}}Seu boleto chegou - ZenFollow{{end}}
+{{define "subject"}}Fatura disponível: Boleto para {{.Username}} - ZenFollow{{end}}
 
 {{define "body"}}
-<!doctype html>
-<html>
-  <body>
-    <p>Olá {{.Username}},</p>
-    <p>Segue o link do seu boleto:</p>
-    <p><a href="{{.InvoiceLink}}">{{.InvoiceLink}}</a></p>
-    <p>The ZenFollow Team</p>
-  </body>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f9fafb; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+        .wrapper { width: 100%; table-layout: fixed; background-color: #f9fafb; padding-bottom: 40px; }
+        .main { background-color: #ffffff; margin: 0 auto; width: 100%; max-width: 600px; border: 1px solid #e5e7eb; border-radius: 8px; margin-top: 40px; }
+        .header { padding: 32px; text-align: center; border-bottom: 1px solid #f3f4f6; }
+        .content { padding: 32px; color: #374151; line-height: 1.6; }
+        .footer { padding: 32px; text-align: center; color: #9ca3af; font-size: 12px; }
+        .button { display: inline-block; padding: 12px 24px; background-color: #4f46e5; color: #ffffff !important; text-decoration: none; border-radius: 6px; font-weight: 600; margin-top: 16px; }
+        .logo { font-size: 24px; font-weight: bold; color: #4f46e5; letter-spacing: -0.5px; }
+        .invoice-box { background-color: #f3f4f6; border-radius: 6px; padding: 16px; margin-top: 24px; border-left: 4px solid #4f46e5; }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <table class="main">
+            <tr>
+                <td class="header">
+                    <span class="logo">ZenFollow</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="content">
+                    <p style="font-size: 18px; font-weight: 600;">Olá, {{.Username}}!</p>
+                    <p>Esperamos que esteja tudo bem. Estamos enviando este e-mail para lembrar que o link da sua fatura/boleto já está disponível para acesso.</p>
+                    
+                    <div class="invoice-box">
+                        <p style="margin: 0; font-size: 14px; color: #6b7280;">Link para pagamento:</p>
+                        <p style="margin: 8px 0 0 0; font-weight: 500; word-break: break-all;">
+                            <a href="{{.InvoiceLink}}" style="color: #4f46e5;">{{.InvoiceLink}}</a>
+                        </p>
+                    </div>
+
+                    <p style="margin-top: 24px; text-align: center;">
+                        <a href="{{.InvoiceLink}}" class="button">Visualizar Boleto</a>
+                    </p>
+
+                    <p style="margin-top: 32px;">Se você já efetuou o pagamento, por favor, desconsidere esta mensagem.</p>
+                    <p>Atenciosamente,<br><strong>Equipe ZenFollow</strong></p>
+                </td>
+            </tr>
+            <tr>
+                <td class="footer">
+                    <p>&copy; 2026 ZenFollow. Automação inteligente para freelancers.</p>
+                    <p>Você está recebendo este e-mail através da plataforma ZenFollow.</p>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
 </html>
 {{end}}

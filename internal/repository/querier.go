@@ -14,6 +14,8 @@ type Querier interface {
 	CreateEmailJob(ctx context.Context, arg CreateEmailJobParams) error
 	CreateNewClient(ctx context.Context, arg CreateNewClientParams) (uuid.UUID, error)
 	CreateNewUser(ctx context.Context, arg CreateNewUserParams) error
+	GetAllClients(ctx context.Context) ([]Client, error)
+	GetAllEmailJobs(ctx context.Context) ([]EmailJob, error)
 	GetClientByUUID(ctx context.Context, id uuid.UUID) (Client, error)
 	GetEmailJobByID(ctx context.Context, id uuid.UUID) (EmailJob, error)
 	GetPendingEmailJobs(ctx context.Context) ([]EmailJob, error)

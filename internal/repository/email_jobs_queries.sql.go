@@ -28,6 +28,37 @@ func (q *Queries) CreateEmailJob(ctx context.Context, arg CreateEmailJobParams) 
 	return err
 }
 
+const getAllEmailJobs = `-- name: GetAllEmailJobs :many
+SELECT id, client_id, status, send_at, sent_at, created_at FROM email_jobs ORDER BY created_at DESC
+`
+
+func (q *Queries) GetAllEmailJobs(ctx context.Context) ([]EmailJob, error) {
+	rows, err := q.db.Query(ctx, getAllEmailJobs)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []EmailJob
+	for rows.Next() {
+		var i EmailJob
+		if err := rows.Scan(
+			&i.ID,
+			&i.ClientID,
+			&i.Status,
+			&i.SendAt,
+			&i.SentAt,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getEmailJobByID = `-- name: GetEmailJobByID :one
 SELECT id, client_id, status, send_at, sent_at, created_at
 FROM email_jobs

@@ -6,3 +6,8 @@ RETURNING id;
 -- name: GetClientByUUID :one
 SELECT * FROM clients 
 WHERE id = $1;
+
+-- name: GetAllClients :many
+SELECT * FROM clients
+ORDER BY created_at DESC;
+

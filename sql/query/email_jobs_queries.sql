@@ -31,3 +31,5 @@ SET status = 'failed'
 WHERE id = $1
 AND (status = 'pending' OR status = 'processing');
 
+-- name: GetAllEmailJobs :many
+SELECT * FROM email_jobs ORDER BY created_at DESC;
