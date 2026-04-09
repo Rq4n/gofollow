@@ -38,12 +38,14 @@ func (s *UserService) CreateNewUser(ctx context.Context, email, password string)
 		Password: string(hash),
 	}
 
-	if err := s.repo.CreateNewUser(ctx, arg); err != nil {
+	if err = s.repo.CreateNewUser(ctx, arg); err != nil {
 		var pgErr *pgconn.PgError
-		if errors.As(err, &pgErr) && pgErr.Code == "23505" {
-			return ErrUserAlreadyExists
+		if errors.As(err, &pgErr) {
+			if pgErr.Code == "23505" {
+				return ErrUserAlreadyExists
+			}
 		}
-		return fmt.Errorf("db error: %w", err)
+		return err
 	}
 	return nil
 }
@@ -58,7 +60,7 @@ func (s *UserService) GetUserByEmail(ctx context.Context, email, password string
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
-		return nil, err
+		return nil, ErrInvalidCredentials
 	}
 	return &user, nil
 }

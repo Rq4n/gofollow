@@ -79,7 +79,7 @@ func main() {
 			}
 
 			for _, job := range jobs {
-				go workerInstance.ProcessSingleJob(context.Background(), job.ClientID)
+				go workerInstance.ProcessSingleJob(context.Background(), job.ID)
 			}
 
 			time.Sleep(5 * time.Second)

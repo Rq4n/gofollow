@@ -18,6 +18,13 @@ func NewEmailJobService(repo repository.Querier) *EmailJobService {
 	}
 }
 
+func (s *EmailJobService) CreateEmailJob(ctx context.Context, arg repository.CreateEmailJobParams) error {
+	if err := s.repo.CreateEmailJob(ctx, arg); err != nil {
+		return fmt.Errorf("email_job error: %w", err)
+	}
+	return nil
+}
+
 func (s *EmailJobService) GetEmailByJobID(ctx context.Context, id uuid.UUID) (*repository.EmailJob, error) {
 	job, err := s.repo.GetEmailJobByID(ctx, id)
 	if err != nil {

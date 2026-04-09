@@ -9,25 +9,27 @@ import (
 )
 
 type (
+
+	// UserServiceInterface defines user-related methods
+	UserServiceInterface interface {
+		CreateNewUser(ctx context.Context, email, password string) error
+		GetUserByEmail(ctx context.Context, email, password string) (*repository.GetUserByEmailRow, error)
+	}
+
 	// ClientServiceInterface defines client-related methods
 	ClientServiceInterface interface {
 		CreateNewClient(ctx context.Context, userID uuid.UUID, name, email, invoiceLink string, sendDate time.Time) error
-		GetClientByUUID(ctx context.Context, id, user_id uuid.UUID) (*repository.Client, error)
+		GetClientByUUID(ctx context.Context, id uuid.UUID) (*repository.Client, error)
 	}
 
 	// EmailJobServiceInterface defines email job-related methods
 	EmailJobServiceInterface interface {
+		CreateEmailJob(ctx context.Context, arg repository.CreateEmailJobParams) error
 		GetEmailByJobID(ctx context.Context, id uuid.UUID) (*repository.EmailJob, error)
 		GetPendingEmailJobs(ctx context.Context) ([]repository.EmailJob, error)
 		MarkJobAsCompleted(ctx context.Context, id uuid.UUID) error
 		MarkJobAsFailed(ctx context.Context, id uuid.UUID) error
 		TryMarkJobAsProcessing(ctx context.Context, id uuid.UUID) (int64, error)
-	}
-
-	// UserServiceInterface defines user-related methods
-	UserServiceInterface interface {
-		CreateNewUser(ctx context.Context, email, password string) error
-		GetUserByName(ctx context.Context, name, password string) (*repository.GetUserByEmailRow, error)
 	}
 )
 
