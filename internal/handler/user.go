@@ -82,7 +82,7 @@ func (h *UserHandler) HandleUserLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tokenStr, err := auth.GenerateToken(resp.ID, user.Email)
+	tokenStr, err := auth.GenerateToken(resp.ID, user.Email, "free")
 	if err != nil {
 		http.Error(w, ErrInternalServerErr.Error(), http.StatusInternalServerError)
 		return

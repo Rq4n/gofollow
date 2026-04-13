@@ -65,8 +65,8 @@ func (s *ClientService) GetClientByUUID(ctx context.Context, id uuid.UUID) (*rep
 	return &resp, nil
 }
 
-func (s *ClientService) GetAllClients(ctx context.Context) ([]repository.Client, error) {
-	resp, err := s.repo.GetAllClients(ctx, uuid.New())
+func (s *ClientService) GetAllClients(ctx context.Context, userID uuid.UUID) ([]repository.Client, error) {
+	resp, err := s.repo.GetAllClients(ctx, userID)
 	if err != nil {
 		return nil, fmt.Errorf("db error %v", err)
 	}

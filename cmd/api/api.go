@@ -48,14 +48,15 @@ func (app *Application) mount() http.Handler {
 	r.Use(middleware.Throttle(100))
 
 	r.Post("/register", app.handleUser.HandleCreateUser)
-	r.Post("/lfgin", app.handleUser.HandleUserLogin)
-	r.Get("health", func(w http.ResponseWriter, r *http.Request) {
+	r.Post("/login", app.handleUser.HandleUserLogin)
+	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(`health: ok`))
 	})
 
 	r.Route("/admin", func(r chi.Router) {
 		r.Use(auth.AuthMiddleware)
 		r.Post("/client", app.handleClient.HandleCreateClient)
+		r.Get("/client/clients", app.handleClient.)
 	})
 
 	return r

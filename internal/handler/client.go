@@ -60,3 +60,25 @@ func (h *ClientHandler) HandleCreateClient(w http.ResponseWriter, r *http.Reques
 
 	utils.WriteJSON(w, http.StatusCreated, nil)
 }
+
+func (h *ClientHandler) HandleGetAllClients(w http.ResponseWriter, r *http.Request) {
+	var client ClientPayload
+	if err := utils.ParseJSON(r, &client); err != nil {
+		utils.WriteError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	userID, ok := r.Context().Value("user_id").(uuid.UUID)
+	if !ok {
+		utils.WriteError(w, http.StatusUnauthorized, ErrUnauthorized)
+		return
+	}
+
+	clients, err := h.clientService.GetAllClients(r.Context(), userID)
+	if err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, err)
+		return
+
+	}
+	utils.WriteJSON(w, http.StatusAccepted, clients)
+}
