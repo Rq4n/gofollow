@@ -3,5 +3,5 @@ INSERT INTO users (email, password)
 VALUES ($1, $2);
 
 -- name: GetUserByEmail :one
-SELECT id, email, password FROM users
+SELECT id, email, password, role FROM users
 WHERE email = $1;

@@ -56,7 +56,7 @@ func (app *Application) mount() http.Handler {
 	r.Route("/admin", func(r chi.Router) {
 		r.Use(auth.AuthMiddleware)
 		r.Post("/client", app.handleClient.HandleCreateClient)
-		r.Get("/client/clients", app.handleClient.)
+		r.Get("/client/show", app.handleClient.HandleGetAllClients)
 	})
 
 	return r

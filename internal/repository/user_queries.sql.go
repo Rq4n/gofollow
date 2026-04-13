@@ -27,7 +27,7 @@ func (q *Queries) CreateNewUser(ctx context.Context, arg CreateNewUserParams) er
 }
 
 const getUserByEmail = `-- name: GetUserByEmail :one
-SELECT id, email, password FROM users
+SELECT id, email, password, role FROM users
 WHERE email = $1
 `
 
@@ -35,11 +35,17 @@ type GetUserByEmailRow struct {
 	ID       uuid.UUID
 	Email    string
 	Password string
+	Role     string
 }
 
 func (q *Queries) GetUserByEmail(ctx context.Context, email string) (GetUserByEmailRow, error) {
 	row := q.db.QueryRow(ctx, getUserByEmail, email)
 	var i GetUserByEmailRow
-	err := row.Scan(&i.ID, &i.Email, &i.Password)
+	err := row.Scan(
+		&i.ID,
+		&i.Email,
+		&i.Password,
+		&i.Role,
+	)
 	return i, err
 }
