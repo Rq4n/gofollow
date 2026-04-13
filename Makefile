@@ -5,7 +5,7 @@ run: build
 	@./bin/gofollow
 
 test:
-	@go test ./internal/service/...
+	@go test -v ./internal/service/...
 
 migrate-create:
 	@migrate create -ext sql -dir ./migrations -seq $(name)

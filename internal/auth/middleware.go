@@ -24,3 +24,16 @@ func AuthMiddleware(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
+
+func RequireRole(role string) func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			userRole, ok := r.Context().Value("role").(string)
+			if !ok || userRole != role {
+				http.Error(w, "forbideen", http.StatusForbidden)
+				return
+			}
+			next.ServeHTTP(w, r.WithContext(r.Context()))
+		})
+	}
+}

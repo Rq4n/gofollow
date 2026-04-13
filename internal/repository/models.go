@@ -32,4 +32,5 @@ type User struct {
 	Email     string
 	Password  string
 	CreatedAt pgtype.Timestamptz
+	Role      string
 }

@@ -13,6 +13,7 @@ import (
 type CustomClaims struct {
 	Account string    `json:"account"`
 	UserID  uuid.UUID `json:"user_id"`
+	Role    string    `json:"role"`
 	jwt.RegisteredClaims
 }
 

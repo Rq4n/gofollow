@@ -38,11 +38,12 @@ func (q *Queries) CreateNewClient(ctx context.Context, arg CreateNewClientParams
 
 const getAllClients = `-- name: GetAllClients :many
 SELECT id, user_id, name, email, invoice_link, created_at FROM clients
+WHERE user_id = $1
 ORDER BY created_at DESC
 `
 
-func (q *Queries) GetAllClients(ctx context.Context) ([]Client, error) {
-	rows, err := q.db.Query(ctx, getAllClients)
+func (q *Queries) GetAllClients(ctx context.Context, userID uuid.UUID) ([]Client, error) {
+	rows, err := q.db.Query(ctx, getAllClients, userID)
 	if err != nil {
 		return nil, err
 	}

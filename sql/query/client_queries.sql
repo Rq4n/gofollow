@@ -9,5 +9,6 @@ WHERE id = $1;
 
 -- name: GetAllClients :many
 SELECT * FROM clients
+WHERE user_id = $1
 ORDER BY created_at DESC;
 

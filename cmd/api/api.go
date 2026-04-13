@@ -15,6 +15,7 @@ import (
 	"github.com/Rq4n/gofollow/internal/handler"
 	"github.com/Rq4n/gofollow/internal/mailer"
 	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"go.uber.org/zap"
 )
@@ -40,8 +41,17 @@ type DBConfig struct {
 func (app *Application) mount() http.Handler {
 	r := chi.NewRouter()
 
+	r.Use(middleware.RequestID)
+	r.Use(middleware.RealIP)
+	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
+	r.Use(middleware.Throttle(100))
+
 	r.Post("/register", app.handleUser.HandleCreateUser)
-	r.Post("/login", app.handleUser.HandleUserLogin)
+	r.Post("/lfgin", app.handleUser.HandleUserLogin)
+	r.Get("health", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte(`health: ok`))
+	})
 
 	r.Route("/admin", func(r chi.Router) {
 		r.Use(auth.AuthMiddleware)
