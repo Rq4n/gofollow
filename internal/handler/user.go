@@ -24,13 +24,11 @@ func NewUserHandler(userService service.UserService) *UserHandler {
 type RegisterUserPayload struct {
 	Email    string `json:"email" validate:"required,email"`
 	Password string `json:"password" validate:"required,min=3,max=130"`
-	Role     string `json:"role"`
 }
 
 type LoginUserPayload struct {
 	Email    string `json:"email" validate:"required,email"`
 	Password string `json:"password" validate:"required"`
-	Role     string `json:"role"`
 }
 
 func (h *UserHandler) HandleCreateUser(w http.ResponseWriter, r *http.Request) {
@@ -84,7 +82,7 @@ func (h *UserHandler) HandleUserLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tokenStr, err := auth.GenerateToken(resp.ID, user.Email, user.Role)
+	tokenStr, err := auth.GenerateToken(resp.ID, user.Email, resp.Role)
 	if err != nil {
 		http.Error(w, ErrInternalServerErr.Error(), http.StatusInternalServerError)
 		return
