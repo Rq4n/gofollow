@@ -70,9 +70,19 @@ func main() {
 		Mail:   mailClient,
 	}
 
+	workerCtx, workerCancel := context.WithCancel(context.Background())
+	defer workerCancel()
+
 	go func() {
 		for {
-			jobs, err := emailService.GetPendingEmailJobs(context.Background())
+			select {
+			case <-workerCtx.Done():
+				log.Print("worker stopped")
+				return
+			default:
+			}
+
+			jobs, err := emailService.GetPendingEmailJobs(workerCtx)
 			if err != nil {
 				log.Println("worker error:", err)
 				time.Sleep(5 * time.Second)
@@ -80,7 +90,7 @@ func main() {
 			}
 
 			for _, job := range jobs {
-				go workerInstance.ProcessSingleJob(context.Background(), job.ID)
+				go workerInstance.ProcessSingleJob(workerCtx, job.ID)
 			}
 
 			time.Sleep(5 * time.Second)
