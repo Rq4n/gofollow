@@ -33,8 +33,6 @@ func TestCreateNewUser_AlreadyExists(t *testing.T) {
 	}
 }
 
-// TODO: test GetUserByEmail_Success
-
 func TestGetUserByEmail_Succes(t *testing.T) {
 	hash, err := bcrypt.GenerateFromPassword([]byte("Ry@nLima06##"), bcrypt.DefaultCost)
 	if err != nil {
@@ -60,5 +58,29 @@ func TestGetUserByEmail_Succes(t *testing.T) {
 	}
 }
 
-// TODO: test GetUserByEmail_WrongPassword
+func TestGetUserByEmail_WrongPassword(t *testing.T) {
+	hash, err := bcrypt.GenerateFromPassword([]byte("Foobar"), bcrypt.DefaultCost)
+	if err != nil {
+		t.Fatalf("failed to hash password %v", err)
+	}
+	repo := &mockRepo{
+		getUserByEmailFn: func(email string) (repository.GetUserByEmailRow, error) {
+			return repository.GetUserByEmailRow{
+				ID:       uuid.New(),
+				Email:    email,
+				Password: string(hash),
+			}, nil
+		},
+	}
+	svc := NewUserService(repo)
+
+	user, err := svc.GetUserByEmail(context.Background(), "foo@gmail.com", "SenhaErrada")
+	if err == nil {
+		t.Errorf("expected error got nil")
+	}
+	if user != nil {
+		t.Errorf("expected nil got %v", err)
+	}
+}
+
 // TODO: test GetUserByEmail_NotFound
